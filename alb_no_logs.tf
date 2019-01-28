@@ -62,8 +62,12 @@ resource "aws_lb_listener" "frontend_http_tcp_no_logs" {
   count             = "${var.logging_enabled ? 0 : var.http_tcp_listeners_count}"
 
   default_action {
-    target_group_arn = "${aws_lb_target_group.main_no_logs.*.id[lookup(var.http_tcp_listeners[count.index], "target_group_index", 0)]}"
-    type             = "forward"
+    type             = "fixed-response"
+    fixed_response {
+      content_type = "text/plain"
+      message_body = "ALBert forbids this"
+      status_code = "403"
+    }
   }
 }
 
@@ -76,8 +80,12 @@ resource "aws_lb_listener" "frontend_https_no_logs" {
   count             = "${var.logging_enabled ? 0 : var.https_listeners_count}"
 
   default_action {
-    target_group_arn = "${aws_lb_target_group.main_no_logs.*.id[lookup(var.https_listeners[count.index], "target_group_index", 0)]}"
-    type             = "forward"
+    type             = "fixed-response"
+    fixed_response {
+      content_type = "text/plain"
+      message_body = "ALBert forbids this"
+      status_code = "403"
+    }
   }
 }
 
